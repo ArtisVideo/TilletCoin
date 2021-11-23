@@ -1,0 +1,9 @@
+FROM golang:1.17
+
+WORKDIR /app
+
+COPY TilletCoin .
+
+EXPOSE 8080
+
+CMD ["./TilletCoin"]

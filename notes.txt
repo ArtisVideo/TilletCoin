@@ -1,0 +1,21 @@
+----- Docker stuff -----
+
+    Docker start cmd:
+        sudo docker run -p 8080:8080 */Output from build command/*
+
+    Last build cmd output:
+        8cd8a0438949
+
+    Update docker container:
+        sudo docker build .
+
+----- DB stuff -----
+
+    User:
+    postgres (Secure ik)
+
+    Password:
+        Tillet
+
+    DB name:
+        tillet_coin

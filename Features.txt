@@ -1,0 +1,16 @@
+---- Users ----
+
+    Login
+    Join class
+    See current balance
+    Transfer money
+    Store page
+    
+---- Teachers ----
+
+    Login
+    Manage / view / create /invite people to classes
+    Add / Remove classes / Users
+    Manage Store
+    View leadboard
+    give / take currency 
