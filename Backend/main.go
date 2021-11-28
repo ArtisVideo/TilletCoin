@@ -3,14 +3,18 @@ package main
 import (
     "github.com/gin-gonic/gin"
     "net/http"
+    "net"
     "database/sql"
     "strconv"
     "fmt"
+    "strings"
+    "github.com/glendc/go-external-ip"
     _ "github.com/lib/pq"
 )
 
+// https://gobyexample.com/command-line-arguments
 const (
-    host = "localhost"
+    host = "172.17.0.2"
     port = 5432
     user = "postgres"
     password = "Tillet";
@@ -31,6 +35,26 @@ type userstruct struct {
 
 }
 
+func GetInteralIP(port string) string {
+    conn, err := net.Dial("udp", "8.8.8.8:80")
+    if err != nil { panic(err) }
+
+    defer conn.Close()
+    localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+    return localAddr.IP.String() + ":" + port
+}
+
+func GetExternalIP(port string) string {
+    consensus := externalip.DefaultConsensus(nil, nil)
+    ip, err := consensus.ExternalIP()
+    if err != nil {
+        panic(err)
+    }
+
+    return ip.String() + ":" + port
+}
+
 // Gets user data from the database when given an ID 
 func GetUserData(ID string) [9]string{
     var usrdata[9] string
@@ -39,13 +63,9 @@ func GetUserData(ID string) [9]string{
     host, port, user, password, dbname)
 
     db, err := sql.Open("postgres", psqlInfo)
-    if err != nil {
-        panic(err)
-    }  
+    if err != nil { panic(err) }
     err = db.Ping()
-    if err != nil {
-        panic(err)
-    }
+    if err != nil { panic(err) }
 
     var sqlStatement string = `SELECT id, first_name, last_name, wealth, class1, class2, class3, class4, isteacher FROM users WHERE id=$1;`
     var id string
@@ -86,7 +106,7 @@ func main() {
         ID := c.Param("id")
         UserData := GetUserData(ID)
         Wealthint, err := strconv.Atoi(UserData[3])
-        fmt.Println(err)
+        if err != nil { panic(err) }
             if UserData[8] == "false" {
                 c.IndentedJSON(http.StatusOK, []userstruct {
                     {ID: UserData[0], FName: UserData[1], LName: UserData[2], Wealth: Wealthint, Class1: UserData[4],Class2: UserData[5],Class3: UserData[6],Class4: UserData[7], IsTeacher: false},
@@ -100,8 +120,24 @@ func main() {
     router.GET("/user", func(c *gin.Context) {
         c.String(http.StatusOK, "You forget the ID")
     })
-
     fmt.Println("Starting...")
-    // TODO: Use net.InterfaceAddrs() func from "net" to automatically change IP
-    router.Run("192.168.0.71:8080")
+
+    var IsReserved string
+    var port string   
+
+    fmt.Println("Do you want to use an internal or external address? (I/E)")
+    fmt.Scanln(&IsReserved)
+
+    fmt.Println("Please enter a port number (Deafult: 8080)")
+    fmt.Scanln(&port)
+    if port == "" { port = "8080" }
+
+    switch strings.ToUpper(IsReserved) {
+    case "I":
+        router.Run(GetInteralIP(port))
+    case "E":
+        router.Run(GetExternalIP(port))
+    default:
+        fmt.Println("Please enter I/E")
+    }
 }
