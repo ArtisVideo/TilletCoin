@@ -15,7 +15,7 @@ import (
 
 // https://gobyexample.com/command-line-arguments
 const (
-	host     = "172.17.0.1"
+	host     = "172.17.0.2"
 	port     = 5432
 	user     = "postgres"
 	password = "Tillet"
