@@ -143,11 +143,22 @@ func main() {
 			c.IndentedJSON(http.StatusOK, []userstruct{
 				{ID: UserData[0], FName: UserData[1], LName: UserData[2], Wealth: Wealthint, Class1: UserData[4], Class2: UserData[5], Class3: UserData[6], Class4: UserData[7], IsTeacher: false},
 			})
+			return
 		} else {
 			c.IndentedJSON(http.StatusOK, []userstruct{
 				{ID: UserData[0], FName: UserData[1], LName: UserData[2], Wealth: Wealthint, Class1: UserData[4], Class2: UserData[5], Class3: UserData[6], Class4: UserData[7], IsTeacher: true},
 			})
+			return
 		}
+	})
+
+	router.POST("/user/create/:id", func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+		ID := c.Param("id")
+		_ = ID //Temp
 	})
 
 	//Check if a ID is in the DB
@@ -173,8 +184,10 @@ func main() {
 		switch err := row.Scan(&ID); err {
 		case sql.ErrNoRows:
 			c.Status(http.StatusNoContent)
+			return
 		case nil:
 			c.Status(http.StatusOK)
+			return
 		}
 	})
 
