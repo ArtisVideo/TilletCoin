@@ -20,7 +20,7 @@ const parseJwt = (token) => {
     } catch (e) {
         return null; }
 };
-
+-
 Cookie = getCookie("ID")
 if (Cookie != null) {
     console.log("A")
@@ -38,8 +38,8 @@ function handleCredentialResponse(response) {
     if (parsedJwt.hd == "redborne.com") {
         request.open('GET', `http://192.168.0.72:8080/user/isvalid/${parsedJwt.sub}`, true)
         request.addEventListener("readystatechange", function() {
-            if (request.status == 204) {
-                console.log("Create account")
+            if (request.status == 204) { //Change to 200 when ready
+                window.location = `http://localhost:5500/Frontend/signup.html?JWT=${response.credential}`;
             } else if (request.status == 200) {
                 document.cookie = `ID=${parsedJwt.sub}`
                 window.location = `http://localhost:5500/Frontend/dash.html`;

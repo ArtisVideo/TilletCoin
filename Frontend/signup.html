@@ -7,6 +7,11 @@
     <title>Sign up</title>
 </head>
 <body>
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        console.log(urlParams.get("JWT"));
+    </script>
     <form>
         <br>
             <label for="Fname">First Name</label>
