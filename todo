@@ -1,1 +1,2 @@
-Move postgres database to docker container
+Create new accounts automatically - get data from G classroom
+Verifiy the incomming JWT on signup so people cant just put random data in the db and hack everything

@@ -10,7 +10,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	externalip "github.com/glendc/go-external-ip"
-	"github.com/golang-jwt/jwt"
 	_ "github.com/lib/pq"
 )
 
@@ -161,22 +160,9 @@ func main() {
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 		JWT := c.Param("JWT")
-		_ = JWT //Temp
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			// Don't forget to validate the alg is what you expect:
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-			}
-
-			// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-			return hmacSampleSecret, nil
-		})
-
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			fmt.Println(claims["foo"], claims["nbf"])
-		} else {
-			fmt.Println(err)
-		}
+		// TODO: Verify JWT
+		s := strings.Split(JWT, ".")[1]
+		fmt.Println(s)
 	})
 
 	//Check if a ID is in the DB
