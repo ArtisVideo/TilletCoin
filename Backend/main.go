@@ -57,8 +57,6 @@ func GetExternalIP(port string) string {
 	return ip.String() + ":" + port
 }
 
-var hmacSampleSecret []byte
-
 // Gets user data from the database when given an ID
 func GetUserData(ID string) [9]string {
 	var usrdata [9]string
@@ -161,8 +159,9 @@ func main() {
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 		JWT := c.Param("JWT")
 		// TODO: Verify JWT
-		s := strings.Split(JWT, ".")[1]
-		fmt.Println(s)
+		fmt.Println(JWT)
+		// s := strings.SplitN(JWT, ".", 3)
+		//fmt.Println(s[2])
 	})
 
 	//Check if a ID is in the DB
